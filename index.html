@@ -82,8 +82,9 @@ content="google23a9c3762fc1cd27">
 map.createPane('pane_measure');map.getPane('pane_measure').style.zIndex=999;L.control.zoom({zoomInTitle:'Povećaj kartu',zoomOutTitle:'Smanji kartu'}).addTo(map);L.control.locate({strings:{title:"Pronađi moju lokaciju",popup:"Nalazite se unutar {distance} m od ovog mjesta.",outsideMapBoundsMsg:"Nalazite se izvan granica karte."}}).addTo(map);map.whenReady(function(){document.querySelectorAll('.leaflet-control a').forEach(function(el){el.removeAttribute('href');});});var OSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
 var ESRI=L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{});map.attributionControl.remove();
   ESRI.on('load', function() {
-    var preloader = document.getElementById('preloader');
-    if(preloader) preloader.style.display = 'none';
+    map.whenReady(function() {
+  var preloader = document.getElementById('preloader');
+  if (preloader) preloader.style.display = 'none';
   });ESRI.addTo(map);
 L.control.attribution({position:'bottomleft'}).addTo(map);map.removeControl(map.attributionControl);
 var attribution=L.control.attribution({prefix:false,position:'bottomleft'}).addTo(map);
@@ -369,3 +370,4 @@ if(typeof layer_Opine_1!=='undefined'&&!map.hasLayer(layer_Opine_1)){map.addLaye
         </script>
 </body>
 </html>
+
