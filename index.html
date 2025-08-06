@@ -8,22 +8,15 @@
 <meta name=apple-mobile-web-app-capable content=yes>
 <meta name="google-site-verification" 
 content="google23a9c3762fc1cd27">
-<meta name="keywords" content="karta, plaže, parkirališta, smještaj, marine, trajektne luke, trajektne linije, zračne luke, zaštićena priroda, kulturna dobra, ceste, općine, gradovi, županije, interaktivna karta, hrvatski Jadran">
+<meta name="keywords" content="plaže, parkirališta, smještaj, marine, trajektne luke, trajektne linije, zračne luke, zaštićena priroda, kulturna dobra, ceste, općine, gradovi, županije, interaktivna karta, hrvatski Jadran">
 <meta name="description" content="Turistički informacijski sustav Republike Hrvatske. Preglednik plaža, parkirališta, smještaja, marina, trajektnih luka i trajektnih linija, zračnih luka, zaštićene prirode i kulturnih dobara. Interaktivna karta s informacijama o turističkoj infrastrukturi u Republici Hrvatskoj.">
-<meta property="og:title" content="Preglednik marina i luka RH" />
-<meta property="og:description" content="Interaktivna karta marina, luka i kulturnih dobara uz hrvatsku obalu." />
-<meta property="og:image" content="https://preglednik.github.io/tis-rh/images/preview.jpg" />
 <link rel=stylesheet href=css/leaflet.css>
 <link rel=stylesheet href=css/L.Control.Layers.Tree.css>
 <link rel=stylesheet href=css/L.Control.Locate.min.css>
-<link rel=stylesheet href=css/qgis2web.css>
 <link rel=stylesheet href=css/fontawesome-all.min.css>
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel=stylesheet>
 <link rel=stylesheet href=css/MarkerCluster.css>
 <link rel=stylesheet href=css/MarkerCluster.Default.css>
-<link rel=stylesheet href=https://unpkg.com/leaflet@1.9.4/dist/leaflet.css />
-<link rel=stylesheet href=css/leaflet.photon.css>
-<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel=stylesheet>
 <style>html,body,#map{width:100%;height:100%;padding:0;margin:0}</style>
 <style>html,body{height:100%;margin:0;font-family:'PT Sans',sans-serif}#map{height:100%}.leaflet-control.abstract{width:38px!important;height:36px!important;border:1px solid #666!important;background-color:#f8f9fa!important;background-image:url('https://raw.githubusercontent.com/preglednik/tis-ikona/main/TIS_RH-removebg-preview.png')!important;background-size:30px 30px!important;background-position:center center!important;background-repeat:no-repeat!important;border-radius:4px!important;box-shadow:1px 1px 4px rgba(0,0,0,0.65)!important;font-size:18px;text-align:center;line-height:30px;color:transparent!important;cursor:pointer;user-select:none}.leaflet-control.abstractUncollapsed{background-color:#f8f9fa!important;font-family:'PT Sans',sans-serif;font-size:9pt;max-width:400px;max-height:70vh;overflow-y:auto;padding:15px;border-radius:10px;box-shadow:0 0 8px rgba(0,0,0,0.4);color:black}.leaflet-control-measure{width:30px;height:30px;border:1px solid #666!important;background-color:#f8f9fa!important;background-size:26px 26px!important;border-radius:4px!important;background-position:center center;background-repeat:no-repeat;box-shadow:1px 1px 4px rgba(0,0,0,0.65)!important;font-size:18px;text-align:center;line-height:30px;color:#333!important;cursor:pointer;user-select:none}.leaflet-control-measure:hover{background-color:#f0f0f0}.leaflet-control-measure.active{background-color:#d0ebff;border-color:#0056b3;color:#fff}#infoBox{position:absolute;top:180px;left:10px;background:white;padding:8px 12px;border-radius:6px;box-shadow:0 0 8px rgba(0,0,0,0.3);font-size:14px;display:none;z-index:1000}.leaflet-control-layers-toggle{width:30px!important;height:30px!important;background-size:26px 26px!important;background-position:center center;background-repeat:no-repeat;font-family:'PT Sans',sans-serif!important;background-color:#fff;border:1px solid #666;border-radius:4px;box-shadow:1px 1px 4px rgba(0,0,0,0.3);cursor:pointer}.leaflet-control-layers-toggle::before{font-family:'PT Sans',sans-serif;font-size:18px;display:block;text-align:center;line-height:30px}</style>
 <style>.leaflet-control-attribution{left:10px!important;bottom:10px!important;right:auto!important;text-align:left!important;display:flex!important;align-items:center;gap:5px;padding:3px 8px!important;background:rgba(255,255,255,0.8)!important;box-shadow:0 0 8px rgba(0,0,0,0.3)!important;border-radius:4px!important;font-size:14px!important}.leaflet-control-attribution a{display:inline-block}.leaflet-control-attribution img{vertical-align:middle}</style>
@@ -63,7 +56,10 @@ content="google23a9c3762fc1cd27">
 <script src=data/Parkiralita_11.js></script>
 <script src=data/Plae_12.js></script>
 <script>var map=L.map('map',{zoomControl:false,maxZoom:18,minZoom:5})
-map.createPane('pane_measure');map.getPane('pane_measure').style.zIndex=999;L.control.zoom({zoomInTitle:'Povećaj kartu',zoomOutTitle:'Smanji kartu'}).addTo(map);L.control.locate({strings:{title:"Pronađi moju lokaciju",popup:"Nalazite se unutar {distance} m od ovog mjesta.",outsideMapBoundsMsg:"Nalazite se izvan granica karte."}}).addTo(map);map.whenReady(function(){document.querySelectorAll('.leaflet-control a').forEach(function(el){el.removeAttribute('href');});});var OSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});var Esri_WorldImagery=L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{});map.attributionControl.remove();Esri_WorldImagery.addTo(map);L.control.attribution({position:'bottomleft'}).addTo(map);map.removeControl(map.attributionControl);var attribution=L.control.attribution({prefix:false,position:'bottomleft'}).addTo(map);attribution.addAttribution('<img src="https://leafletjs.com/docs/images/logo.png" '+'style="height:22px; cursor: pointer;" '+'alt="Leaflet logo" '+'title="https://leafletjs.com" '+'onclick="window.open(\'https://leafletjs.com\', \'_blank\')">');var hash=new L.Hash(map);var autolinker=new Autolinker({truncate:{length:30,location:'smart'}});function removeEmptyRowsFromPopupContent(content,feature){var tempDiv=document.createElement('div');tempDiv.innerHTML=content;var rows=tempDiv.querySelectorAll('tr');for(var i=0;i<rows.length;i++){var td=rows[i].querySelector('td.visible-with-data');var key=td?td.id:'';if(td&&td.classList.contains('visible-with-data')&&feature.properties[key]==null){rows[i].parentNode.removeChild(rows[i]);}}
+map.createPane('pane_measure');map.getPane('pane_measure').style.zIndex=999;L.control.zoom({zoomInTitle:'Povećaj kartu',zoomOutTitle:'Smanji kartu'}).addTo(map);L.control.locate({strings:{title:"Pronađi moju lokaciju",popup:"Nalazite se unutar {distance} m od ovog mjesta.",outsideMapBoundsMsg:"Nalazite se izvan granica karte."}}).addTo(map);map.whenReady(function(){document.querySelectorAll('.leaflet-control a').forEach(function(el){el.removeAttribute('href');});});var OSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
+var MapTiler=L.tileLayer('https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=qtOFGCBncEIrz4rMiKZC',{});map.attributionControl.remove();//MapTiler.addTo(map);L.control.attribution({position:'bottomleft'}).addTo(map);map.removeControl(map.attributionControl);
+var attribution=L.control.attribution({prefix:false,position:'bottomleft'}).addTo(map);
+attribution.addAttribution('<img src="https://leafletjs.com/docs/images/logo.png" '+'style="height:22px; cursor: pointer;" '+'alt="Leaflet logo" '+'title="https://leafletjs.com" '+'onclick="window.open(\'https://leafletjs.com\', \'_blank\')">');var hash=new L.Hash(map);var autolinker=new Autolinker({truncate:{length:30,location:'smart'}});function removeEmptyRowsFromPopupContent(content,feature){var tempDiv=document.createElement('div');tempDiv.innerHTML=content;var rows=tempDiv.querySelectorAll('tr');for(var i=0;i<rows.length;i++){var td=rows[i].querySelector('td.visible-with-data');var key=td?td.id:'';if(td&&td.classList.contains('visible-with-data')&&feature.properties[key]==null){rows[i].parentNode.removeChild(rows[i]);}}
 return tempDiv.innerHTML;}
 function addClassToPopupIfMedia(content,popup){var tempDiv=document.createElement('div');tempDiv.innerHTML=content;if(tempDiv.querySelector('td img')){popup._contentNode.classList.add('media');setTimeout(function(){popup.update();},10);}else{popup._contentNode.classList.remove('media');}}
 var abstract=new L.Control({'position':'topright'});abstract.onAdd=function(map){this._div=L.DomUtil.create('div','leaflet-control abstract');this._div.id='abstract'
@@ -80,9 +76,9 @@ abstract.show=function(){this._div.classList.remove("abstract");this._div.classL
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">Zagreb, kolovoz 2025.</span><br><br />'
 +'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Izvornici:</strong><br />'
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Nacionalna infrastruktura prostornih podataka</span><br />'
-+'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- ESRI World Imagery</span><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- OpenStreetMap</span><br />'
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Geofabrik</span><br />'
-+'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- OpenStreetMap</span><br><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- MapTiler</span><br><br />'
 +'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Autori:</strong><br />'
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Josip Alpeza, univ. bacc. ing. geod. et geoinf.</span><br />'
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Vanna Roglić, univ. bacc. ing. geod. et geoinf.</span><br />';};abstract.addTo(map);var bounds_group=new L.featureGroup([]);function setBounds(){if(bounds_group.getLayers().length){map.fitBounds(bounds_group.getBounds());}
@@ -291,8 +287,8 @@ map.createPane('pane_Parkiralita_11');map.getPane('pane_Parkiralita_11').style.z
                     </tr>\
                 </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
 function style_Plae_12_0(){return{pane:'pane_Plae_12',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Plae_12.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
-map.createPane('pane_Plae_12');map.getPane('pane_Plae_12').style.zIndex=412;map.getPane('pane_Plae_12').style['mix-blend-mode']='normal';var layer_Plae_12=new L.geoJson(json_Plae_12,{attribution:'',interactive:true,dataVar:'json_Plae_12',layerName:'layer_Plae_12',pane:'pane_Plae_12',onEachFeature:pop_Plae_12,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Plae_12_0(feature));},});var cluster_Plae_12=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Plae_12.addLayer(layer_Plae_12);bounds_group.addLayer(layer_Plae_12);cluster_Plae_12.addTo(map);var baseTree=[{label:'Podloge:',children:[{label:'Satelitska snimka',layer:Esri_WorldImagery},{label:'OpenStreetMap',layer:OSM}]}];var overlayTree=[{label:'Slojevi:',children:[{label:'<img src="legend/Plae_12.png" /> Plaže',layer:cluster_Plae_12},{label:'<img src="legend/Parkiralita_11.png" /> Parkirališta',layer:cluster_Parkiralita_11},{label:'<img src="legend/Smjetaj_10.png" /> Smještaj',layer:cluster_Smjetaj_10},{label:'<img src="legend/Marine_9.png" /> Marine',layer:cluster_Marine_9},{label:'<img src="legend/Trajektneluke_8.png" /> Trajektne luke',layer:cluster_Trajektneluke_8},{label:'<img src="legend/Zraneluke_7.png" /> Zračne luke',layer:cluster_Zraneluke_7},{label:'<img src="legend/Zatienapriroda_6.png" /> Zaštićena priroda',layer:cluster_Zatienapriroda_6},{label:'<img src="legend/Kulturnadobra_5.png" /> Kulturna dobra',layer:cluster_Kulturnadobra_5},{label:'<img src="legend/Trajektnelinije_4.png" /> Trajektne linije',layer:layer_Trajektnelinije_4},{label:'<img src="legend/Ceste_3.png" /> Ceste',layer:layer_Ceste_3},{label:'<img src="legend/Morskagranica_2.png" /> Morska granica',layer:layer_Morskagranica_2},{label:'<img src="legend/Opine_1.png" /> Općine',layer:layer_Opine_1},{label:'<img src="legend/upanije_0.png" /> Županije',layer:layer_upanije_0}]}];var lay=L.control.layers.tree(baseTree,overlayTree,{collapsed:true});lay.addTo(map);var measuring=false;var measureControl=L.Control.extend({options:{position:'topleft'},onAdd:function(map){var container=L.DomUtil.create('div','leaflet-control-measure leaflet-bar');container.title="Izmjeri udaljenost";if(!map.getPane('pane_measure')){map.createPane('pane_measure');}
-map.getPane('pane_measure').style.zIndex=999999;console.log('layer_upanije_0:',layer_upanije_0);console.log('layer_Opine_1:',layer_Opine_1);var btn=L.DomUtil.create('div','',container);btn.innerHTML='📏';btn.style.fontSize='20px';btn.style.textAlign='center';var points=[];var line=null;var infoBox=document.getElementById('infoBox');function updateMeasurement(){if(points.length===0){infoBox.innerHTML='Kliknite na kartu i dodajte dvije ili više točaka.<br>Kliknite na ikonu za dovršetak mjerenja.';}else if(points.length===1){infoBox.innerHTML='Kliknite na kartu za dodavanje drugih točaka.<br>Kliknite na ikonu za dovršetak mjerenja.';}else{var latlngs=points.map(p=>p.getLatLng());var total=0;for(var i=1;i<latlngs.length;i++){total+=latlngs[i-1].distanceTo(latlngs[i]);}
+map.createPane('pane_Plae_12');map.getPane('pane_Plae_12').style.zIndex=412;map.getPane('pane_Plae_12').style['mix-blend-mode']='normal';var layer_Plae_12=new L.geoJson(json_Plae_12,{attribution:'',interactive:true,dataVar:'json_Plae_12',layerName:'layer_Plae_12',pane:'pane_Plae_12',onEachFeature:pop_Plae_12,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Plae_12_0(feature));},});var cluster_Plae_12=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Plae_12.addLayer(layer_Plae_12);bounds_group.addLayer(layer_Plae_12);cluster_Plae_12.addTo(map);var baseTree=[{label:'Podloge:',children:[{label:'Satelitska snimka',layer:MapTiler},{label:'OpenStreetMap',layer:OSM}]}];var overlayTree=[{label:'Slojevi:',children:[{label:'<img src="legend/Plae_12.png" /> Plaže',layer:cluster_Plae_12},{label:'<img src="legend/Parkiralita_11.png" /> Parkirališta',layer:cluster_Parkiralita_11},{label:'<img src="legend/Smjetaj_10.png" /> Smještaj',layer:cluster_Smjetaj_10},{label:'<img src="legend/Marine_9.png" /> Marine',layer:cluster_Marine_9},{label:'<img src="legend/Trajektneluke_8.png" /> Trajektne luke',layer:cluster_Trajektneluke_8},{label:'<img src="legend/Zraneluke_7.png" /> Zračne luke',layer:cluster_Zraneluke_7},{label:'<img src="legend/Zatienapriroda_6.png" /> Zaštićena priroda',layer:cluster_Zatienapriroda_6},{label:'<img src="legend/Kulturnadobra_5.png" /> Kulturna dobra',layer:cluster_Kulturnadobra_5},{label:'<img src="legend/Trajektnelinije_4.png" /> Trajektne linije',layer:layer_Trajektnelinije_4},{label:'<img src="legend/Ceste_3.png" /> Ceste',layer:layer_Ceste_3},{label:'<img src="legend/Morskagranica_2.png" /> Morska granica',layer:layer_Morskagranica_2},{label:'<img src="legend/Opine_1.png" /> Općine',layer:layer_Opine_1},{label:'<img src="legend/upanije_0.png" /> Županije',layer:layer_upanije_0}]}];var lay=L.control.layers.tree(baseTree,overlayTree,{collapsed:true});lay.addTo(map);var measuring=false;var measureControl=L.Control.extend({options:{position:'topleft'},onAdd:function(map){var container=L.DomUtil.create('div','leaflet-control-measure leaflet-bar');container.title="Izmjeri udaljenost";if(!map.getPane('pane_measure')){map.createPane('pane_measure');}
+map.getPane('pane_measure').style.zIndex=999999;var btn=L.DomUtil.create('div','',container);btn.innerHTML='📏';btn.style.fontSize='20px';btn.style.textAlign='center';var points=[];var line=null;var infoBox=document.getElementById('infoBox');function updateMeasurement(){if(points.length===0){infoBox.innerHTML='Kliknite na kartu i dodajte dvije ili više točaka.<br>Kliknite na ikonu za dovršetak mjerenja.';}else if(points.length===1){infoBox.innerHTML='Kliknite na kartu za dodavanje drugih točaka.<br>Kliknite na ikonu za dovršetak mjerenja.';}else{var latlngs=points.map(p=>p.getLatLng());var total=0;for(var i=1;i<latlngs.length;i++){total+=latlngs[i-1].distanceTo(latlngs[i]);}
 if(total<1000){infoBox.innerHTML='<b>Udaljenost: '+total.toFixed(2)+' m</b><br>Kliknite na ikonu za dovršetak mjerenja.';}else{var km=total/1000;infoBox.innerHTML='<b>Udaljenost: '+km.toFixed(2)+' km</b><br>Kliknite na ikonu za dovršetak mjerenja.';}}}
 function resetMeasurement(){points.forEach(p=>map.removeLayer(p));points=[];if(line){map.removeLayer(line);line=null;}
 infoBox.style.display='none';}
@@ -310,34 +306,26 @@ if(typeof layer_Opine_1!=='undefined'&&!map.hasLayer(layer_Opine_1)){map.addLaye
 </div>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js></script>
 <script>
-  // Definicija projekcije HTRS96/TM
   proj4.defs("EPSG:3765", "+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs");
-
   const coordsDiv = document.getElementById('coords');
   const projectionSelect = document.getElementById('projectionSelect');
-
   function toDMS(deg) {
     const absolute = Math.abs(deg);
     const degrees = Math.floor(absolute);
     const minutesFloat = (absolute - degrees) * 60;
     const minutes = Math.floor(minutesFloat);
     const seconds = ((minutesFloat - minutes) * 60).toFixed(2);
-
     const degreesStr = degrees;
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
     const secondsStr = seconds < 10 ? '0' + seconds : seconds;
-
     const sign = deg < 0 ? '-' : '';
     return `${sign}${degreesStr}° ${minutesStr}' ${secondsStr}''`;
   }
-
-  // Ovdje pretpostavljamo da postoji Leaflet karta u varijabli "map"
   if (typeof map !== 'undefined') {
     map.on('mousemove', function(e) {
       const lat = e.latlng.lat;
       const lon = e.latlng.lng;
       const selected = projectionSelect.value;
-
       if (selected === "wgs84") {
         const latDMS = toDMS(lat);
         const lonDMS = toDMS(lon);
@@ -352,7 +340,4 @@ if(typeof layer_Opine_1!=='undefined'&&!map.hasLayer(layer_Opine_1)){map.addLaye
   }
         </script>
 </body>
-
 </html>
-
-
