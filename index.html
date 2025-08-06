@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=X-UA-Compatible content="IE=edge">
+<meta name=viewport content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+<meta name=mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name="google-site-verification" 
+content="google23a9c3762fc1cd27">
+<meta name="keywords" content="plaže, parkirališta, smještaj, marine, trajektne luke, trajektne linije, zračne luke, zaštićena priroda, kulturna dobra, ceste, općine, gradovi, županije, interaktivna karta, hrvatski Jadran">
+<meta name="description" content="Turistički informacijski sustav Republike Hrvatske. Preglednik plaža, parkirališta, smještaja, marina, trajektnih luka i trajektnih linija, zračnih luka, zaštićene prirode i kulturnih dobara. Interaktivna karta s informacijama o turističkoj infrastrukturi u Republici Hrvatskoj.">
+<link rel=stylesheet href=css/leaflet.css>
+<link rel=stylesheet href=css/L.Control.Layers.Tree.css>
+<link rel=stylesheet href=css/L.Control.Locate.min.css>
+<link rel=stylesheet href=css/fontawesome-all.min.css>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel=stylesheet>
+<link rel=stylesheet href=css/MarkerCluster.css>
+<link rel=stylesheet href=css/MarkerCluster.Default.css>
+<style>html,body,#map{width:100%;height:100%;padding:0;margin:0}</style>
+<style>html,body{height:100%;margin:0;font-family:'PT Sans',sans-serif}#map{height:100%}.leaflet-control.abstract{width:32px!important;height:30px!important;border:1px solid #666!important;background-color:#f8f9fa!important;background-image:url('https://raw.githubusercontent.com/preglednik/tis-ikona/main/TIS_RH-removebg-preview.png')!important;background-size:30px 30px!important;background-position:center center!important;background-repeat:no-repeat!important;border-radius:4px!important;box-shadow:1px 1px 4px rgba(0,0,0,0.65)!important;font-size:18px;text-align:center;line-height:30px;color:transparent!important;cursor:pointer;user-select:none}.leaflet-control.abstractUncollapsed{background-color:#f8f9fa!important;font-family:'PT Sans',sans-serif;font-size:9pt;max-width:400px;max-height:70vh;overflow-y:auto;padding:15px;border-radius:10px;box-shadow:0 0 8px rgba(0,0,0,0.4);color:black}.leaflet-control-measure{width:30px;height:30px;border:1px solid #666!important;background-color:#f8f9fa!important;background-size:26px 26px!important;border-radius:4px!important;background-position:center center;background-repeat:no-repeat;box-shadow:1px 1px 4px rgba(0,0,0,0.65)!important;font-size:18px;text-align:center;line-height:30px;color:#333!important;cursor:pointer;user-select:none}.leaflet-control-measure:hover{background-color:#f0f0f0}.leaflet-control-measure.active{background-color:#d0ebff;border-color:#0056b3;color:#fff}#infoBox{position:absolute;top:180px;left:10px;background:white;padding:8px 12px;border-radius:6px;box-shadow:0 0 8px rgba(0,0,0,0.3);font-size:14px;display:none;z-index:1000}.leaflet-control-layers-toggle{width:30px!important;height:30px!important;background-size:26px 26px!important;background-position:center center;background-repeat:no-repeat;font-family:'PT Sans',sans-serif!important;background-color:#fff;border:1px solid #666;border-radius:4px;box-shadow:1px 1px 4px rgba(0,0,0,0.3);cursor:pointer}.leaflet-control-layers-toggle::before{font-family:'PT Sans',sans-serif;font-size:18px;display:block;text-align:center;line-height:30px}</style>
+<style>.leaflet-control-attribution{left:10px!important;bottom:10px!important;right:auto!important;text-align:left!important;display:flex!important;align-items:center;gap:5px;padding:3px 8px!important;background:rgba(255,255,255,0.8)!important;box-shadow:0 0 8px rgba(0,0,0,0.3)!important;border-radius:4px!important;font-size:14px!important}.leaflet-control-attribution a{display:inline-block}.leaflet-control-attribution img{vertical-align:middle}</style>
+<title>Turistički informacijski sustav Republike Hrvatske</title>
+<link rel=icon type=image/x-icon href=https://raw.githubusercontent.com/preglednik/ikona/main/TIS%20RH.ico>
+<style>#coords-container{position:fixed;bottom:10px;right:10px;background-color:rgba(255,255,255,0.95);color:black;padding:8px 12px;border-radius:10px;font-family:'PT Sans',sans-serif;font-size:12px;display:flex;align-items:center;gap:10px;box-shadow:0 0 8px rgba(0,0,0,0.4);z-index:1000;width:max-content;white-space:nowrap}#projectionSelect{font-family:'PT Sans',sans-serif;font-size:12px;padding:5px 10px;border-radius:6px;border:1px solid #ccc;outline:0;cursor:pointer;background-color:white;box-shadow:0 0 4px rgba(0,0,0,0.1);width:max-content}#coords{font-family:'PT Sans',monospace;white-space:nowrap}</style>
+</head>
+<body>
+<div id=map>
+</div>
+<div id=infoBox></div>
+<script src=js/qgis2web_expressions.js></script>
+<script src=js/leaflet.js></script>
+<script src=js/L.Control.Layers.Tree.min.js></script>
+<script src=js/L.Control.Locate.min.js></script>
+<script src=js/leaflet.rotatedMarker.js></script>
+<script src=js/leaflet.pattern.js></script>
+<script src=js/leaflet-hash.js></script>
+<script src=js/Autolinker.min.js></script>
+<script src=js/rbush.min.js></script>
+<script src=js/labelgun.min.js></script>
+<script src=js/labels.js></script>
+<script src=js/leaflet.photon.js></script>
+<script src=js/leaflet.markercluster.js></script>
+<script src=data/upanije_0.js></script>
+<script src=data/Opine_1.js></script>
+<script src=data/Kopnenagranica_0.js></script>
+<script src=data/Morskagranica_2.js></script>
+<script src=data/Ceste_3.js></script>
+<script src=data/Trajektnelinije_4.js></script>
+<script src=data/Kulturnadobra_5.js></script>
+<script src=data/Zatienapriroda_6.js></script>
+<script src=data/Zraneluke_7.js></script>
+<script src=data/Trajektneluke_8.js></script>
+<script src=data/Marine_9.js></script>
+<script src=data/Smjetaj_10.js></script>
+<script src=data/Parkiralita_11.js></script>
+<script src=data/Plae_12.js></script>
+<script>var map=L.map('map',{zoomControl:false,maxZoom:18,minZoom:5})
+map.createPane('pane_measure');map.getPane('pane_measure').style.zIndex=999;L.control.zoom({zoomInTitle:'Povećaj kartu',zoomOutTitle:'Smanji kartu'}).addTo(map);L.control.locate({strings:{title:"Pronađi moju lokaciju",popup:"Nalazite se unutar {distance} m od ovog mjesta.",outsideMapBoundsMsg:"Nalazite se izvan granica karte."}}).addTo(map);map.whenReady(function(){document.querySelectorAll('.leaflet-control a').forEach(function(el){el.removeAttribute('href');});});var OSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
+var ESRI=L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{});map.attributionControl.remove();ESRI.addTo(map);L.control.attribution({position:'bottomleft'}).addTo(map);map.removeControl(map.attributionControl);
+var attribution=L.control.attribution({prefix:false,position:'bottomleft'}).addTo(map);
+attribution.addAttribution('<img src="https://leafletjs.com/docs/images/logo.png" '+'style="height:22px; cursor: pointer;" '+'alt="Leaflet logo" '+'title="https://leafletjs.com" '+'onclick="window.open(\'https://leafletjs.com\', \'_blank\')">');var hash=new L.Hash(map);var autolinker=new Autolinker({truncate:{length:30,location:'smart'}});function removeEmptyRowsFromPopupContent(content,feature){var tempDiv=document.createElement('div');tempDiv.innerHTML=content;var rows=tempDiv.querySelectorAll('tr');for(var i=0;i<rows.length;i++){var td=rows[i].querySelector('td.visible-with-data');var key=td?td.id:'';if(td&&td.classList.contains('visible-with-data')&&feature.properties[key]==null){rows[i].parentNode.removeChild(rows[i]);}}
+return tempDiv.innerHTML;}
+function addClassToPopupIfMedia(content,popup){var tempDiv=document.createElement('div');tempDiv.innerHTML=content;if(tempDiv.querySelector('td img')){popup._contentNode.classList.add('media');setTimeout(function(){popup.update();},10);}else{popup._contentNode.classList.remove('media');}}
+var abstract=new L.Control({'position':'topright'});abstract.onAdd=function(map){this._div=L.DomUtil.create('div','leaflet-control abstract');this._div.id='abstract'
+this._div.setAttribute("onmouseenter","abstract.show()");this._div.setAttribute("onmouseleave","abstract.hide()");this.hide();return this._div;};abstract.hide=function(){this._div.classList.remove("abstractUncollapsed");this._div.classList.add("abstract");this._div.innerHTML='i'}
+abstract.show=function(){this._div.classList.remove("abstract");this._div.classList.add("abstractUncollapsed");this._div.innerHTML='<strong style="font-size: 18pt; font-family: \'PT Serif\', sans-serif; text-align: center; display: block;">Turistički informacijski sustav Republike Hrvatske</strong><br>'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10.5pt; text-align: justify; display: block;">'
++'Ovaj web preglednik izrađen je u sklopu rada \'\'Analiza i vizualizacija turističke infrastrukture u Republici Hrvatskoj\'\' na Geodetskom fakultetu Sveučilišta u Zagrebu, pod vodstvom mentora izv. prof. dr. sc. Matea Gašparovića.</span>'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10.5pt; text-align: justify; display: block;">'
++'Preglednik prikazuje turističku infrastrukturu na području Republike Hrvatske: plaže, parkirališta, smještajne kapacitete (hotele i apartmane), marine, trajektne luke i trajektne linije, zračne luke, zaštićenu prirodu (nacionalne parkove i parkove prirode) i kulturna dobra. Moguće je dodati i slojeve cesta, morsku granicu, općine i županije. Klikom na pojedini sloj prikazuju se potrebne informacije. Omogućeno je i geolociranje korisnika, mjerenje udaljenosti te odabir datuma (WGS84 i HTRS96/TM).'
++'</span><br>'
++'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Kartografska projekcija:</strong><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">Web Mercatorova projekcija (EPSG: 3857)</span><br><br />'
++'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Mjesto i vrijeme izrade:</strong><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">Zagreb, kolovoz 2025.</span><br><br />'
++'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Izvornici:</strong><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Nacionalna infrastruktura prostornih podataka</span><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- OpenStreetMap</span><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Geofabrik</span><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- ESRI World Imagery</span><br><br />'
++'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Autori:</strong><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Josip Alpeza, univ. bacc. ing. geod. et geoinf.</span><br />'
++'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Vanna Roglić, univ. bacc. ing. geod. et geoinf.</span><br />';};abstract.addTo(map);var bounds_group=new L.featureGroup([]);function setBounds(){if(bounds_group.getLayers().length){map.fitBounds(bounds_group.getBounds());}
+map.setMaxBounds(map.getBounds());}
+function pop_upanije_0(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Županija</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_upanije_0_0(){return{pane:'pane_upanije_0',opacity:1,color:'rgba(35,35,35,1.0)',dashArray:'',lineCap:'butt',lineJoin:'miter',weight:1.0,fill:true,fillOpacity:1,fillColor:'rgba(155,155,155,0.36470588235294116)',interactive:true,}}
+map.createPane('pane_upanije_0');map.getPane('pane_upanije_0').style.zIndex=400;map.getPane('pane_upanije_0').style['mix-blend-mode']='normal';var layer_upanije_0=new L.geoJson(json_upanije_0,{attribution:'',interactive:true,dataVar:'json_upanije_0',layerName:'layer_upanije_0',pane:'pane_upanije_0',onEachFeature:pop_upanije_0,style:style_upanije_0_0,});bounds_group.addLayer(layer_upanije_0);function pop_Opine_1(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Općina</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Županija" colspan="2"><strong>Županija</strong><br />'+(feature.properties['Županija']!==null?autolinker.link(String(feature.properties['Županija']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Opine_1_0(){return{pane:'pane_Opine_1',opacity:1,color:'rgba(35,35,35,1.0)',dashArray:'5.0,1.0',lineCap:'butt',lineJoin:'miter',weight:1.0,fill:true,fillOpacity:1,fillColor:'rgba(199,199,199,0.36470588235294116)',interactive:true,}}
+map.createPane('pane_Opine_1');map.getPane('pane_Opine_1').style.zIndex=401;map.getPane('pane_Opine_1').style['mix-blend-mode']='normal';var layer_Opine_1=new L.geoJson(json_Opine_1,{attribution:'',interactive:true,dataVar:'json_Opine_1',layerName:'layer_Opine_1',pane:'pane_Opine_1',onEachFeature:pop_Opine_1,style:style_Opine_1_0,});bounds_group.addLayer(layer_Opine_1);function pop_Morskagranica_2(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td colspan="2">'+(feature.properties['Sloj']!==null?autolinker.link(String(feature.properties['Sloj']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Morskagranica_2_0(){return{pane:'pane_Morskagranica_2',opacity:1,color:'rgba(31,120,180,1.0)',dashArray:'',lineCap:'square',lineJoin:'bevel',weight:1.0,fillOpacity:0,interactive:true,}}
+map.createPane('pane_Morskagranica_2');map.getPane('pane_Morskagranica_2').style.zIndex=402;map.getPane('pane_Morskagranica_2').style['mix-blend-mode']='normal';var layer_Morskagranica_2=new L.geoJson(json_Morskagranica_2,{attribution:'',interactive:true,dataVar:'json_Morskagranica_2',layerName:'layer_Morskagranica_2',pane:'pane_Morskagranica_2',onEachFeature:pop_Morskagranica_2,style:style_Morskagranica_2_0,});bounds_group.addLayer(layer_Morskagranica_2);function pop_Ceste_3(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td colspan="2">'+(feature.properties['Sloj']!==null?autolinker.link(String(feature.properties['Sloj']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Ceste_3_0(){return{pane:'pane_Ceste_3',opacity:1,color:'rgba(227,26,28,1.0)',dashArray:'',lineCap:'square',lineJoin:'bevel',weight:1.0,fillOpacity:0,interactive:true,}}
+map.createPane('pane_Ceste_3');map.getPane('pane_Ceste_3').style.zIndex=403;map.getPane('pane_Ceste_3').style['mix-blend-mode']='normal';var layer_Ceste_3=new L.geoJson(json_Ceste_3,{attribution:'',interactive:true,dataVar:'json_Ceste_3',layerName:'layer_Ceste_3',pane:'pane_Ceste_3',onEachFeature:pop_Ceste_3,style:style_Ceste_3_0,});bounds_group.addLayer(layer_Ceste_3);function pop_Trajektnelinije_4(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Linija" colspan="2"><strong>Linija</strong><br />'+(feature.properties['Linija']!==null?autolinker.link(String(feature.properties['Linija']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Trajanje" colspan="2"><strong>Trajanje (min.)</strong><br />'+(feature.properties['Trajanje']!==null?autolinker.link(String(feature.properties['Trajanje']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Duljina" colspan="2"><strong>Duljina (km)</strong><br />'+(feature.properties['Duljina']!==null?autolinker.link(String(feature.properties['Duljina']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Trajektnelinije_4_0(){return{pane:'pane_Trajektnelinije_4',opacity:1,color:'rgba(72,123,182,1.0)',dashArray:'6, 4',lineCap:'round',lineJoin:'round',weight:1.0,fillOpacity:0,interactive:true,}}
+map.createPane('pane_Trajektnelinije_4');map.getPane('pane_Trajektnelinije_4').style.zIndex=404;map.getPane('pane_Trajektnelinije_4').style['mix-blend-mode']='normal';var layer_Trajektnelinije_4=new L.geoJson(json_Trajektnelinije_4,{attribution:'',interactive:true,dataVar:'json_Trajektnelinije_4',layerName:'layer_Trajektnelinije_4',pane:'pane_Trajektnelinije_4',onEachFeature:pop_Trajektnelinije_4,style:style_Trajektnelinije_4_0,});bounds_group.addLayer(layer_Trajektnelinije_4);map.addLayer(layer_Trajektnelinije_4);function pop_Kulturnadobra_5(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv kulturnog dobra</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Mjesto" colspan="2"><strong>Mjesto</strong><br />'+(feature.properties['Mjesto']!==null?autolinker.link(String(feature.properties['Mjesto']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Vrsta" colspan="2"><strong>Vrsta</strong><br />'+(feature.properties['Vrsta']!==null?autolinker.link(String(feature.properties['Vrsta']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Kulturnadobra_5_0(){return{pane:'pane_Kulturnadobra_5',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Kulturnadobra_5.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
+map.createPane('pane_Kulturnadobra_5');map.getPane('pane_Kulturnadobra_5').style.zIndex=405;map.getPane('pane_Kulturnadobra_5').style['mix-blend-mode']='normal';var layer_Kulturnadobra_5=new L.geoJson(json_Kulturnadobra_5,{attribution:'',interactive:true,dataVar:'json_Kulturnadobra_5',layerName:'layer_Kulturnadobra_5',pane:'pane_Kulturnadobra_5',onEachFeature:pop_Kulturnadobra_5,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Kulturnadobra_5_0(feature));},});var cluster_Kulturnadobra_5=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Kulturnadobra_5.addLayer(layer_Kulturnadobra_5);bounds_group.addLayer(layer_Kulturnadobra_5);cluster_Kulturnadobra_5.addTo(map);function pop_Zatienapriroda_6(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Kategorija" colspan="2"><strong>Kategorija parka</strong><br />'+(feature.properties['Kategorija']!==null?autolinker.link(String(feature.properties['Kategorija']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Godina" colspan="2"><strong>Godina proglašenja</strong><br />'+(feature.properties['Godina']!==null?autolinker.link(String(feature.properties['Godina']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Web" colspan="2"><strong>Web</strong><br />'+(feature.properties['Web']!==null?autolinker.link(String(feature.properties['Web']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Zatienapriroda_6_0(){return{pane:'pane_Zatienapriroda_6',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Zatienapriroda_6.svg',iconSize:[26.599999999999998,26.599999999999998]}),interactive:true,}}
+map.createPane('pane_Zatienapriroda_6');map.getPane('pane_Zatienapriroda_6').style.zIndex=406;map.getPane('pane_Zatienapriroda_6').style['mix-blend-mode']='normal';var layer_Zatienapriroda_6=new L.geoJson(json_Zatienapriroda_6,{attribution:'',interactive:true,dataVar:'json_Zatienapriroda_6',layerName:'layer_Zatienapriroda_6',pane:'pane_Zatienapriroda_6',onEachFeature:pop_Zatienapriroda_6,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Zatienapriroda_6_0(feature));},});var cluster_Zatienapriroda_6=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Zatienapriroda_6.addLayer(layer_Zatienapriroda_6);bounds_group.addLayer(layer_Zatienapriroda_6);cluster_Zatienapriroda_6.addTo(map);function pop_Zraneluke_7(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv zračne luke</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Adresa" colspan="2"><strong>Adresa</strong><br />'+(feature.properties['Adresa']!==null?autolinker.link(String(feature.properties['Adresa']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="IATA kod" colspan="2"><strong>IATA kod</strong><br />'+(feature.properties['IATA kod']!==null?autolinker.link(String(feature.properties['IATA kod']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="ICAO kod" colspan="2"><strong>ICAO kod</strong><br />'+(feature.properties['ICAO kod']!==null?autolinker.link(String(feature.properties['ICAO kod']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Web" colspan="2"><strong>Web</strong><br />'+(feature.properties['Web']!==null?autolinker.link(String(feature.properties['Web']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Zraneluke_7_0(){return{pane:'pane_Zraneluke_7',rotationAngle:1.5707970000000002,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Zraneluke_7.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
+map.createPane('pane_Zraneluke_7');map.getPane('pane_Zraneluke_7').style.zIndex=407;map.getPane('pane_Zraneluke_7').style['mix-blend-mode']='normal';var layer_Zraneluke_7=new L.geoJson(json_Zraneluke_7,{attribution:'',interactive:true,dataVar:'json_Zraneluke_7',layerName:'layer_Zraneluke_7',pane:'pane_Zraneluke_7',onEachFeature:pop_Zraneluke_7,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Zraneluke_7_0(feature));},});var cluster_Zraneluke_7=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Zraneluke_7.addLayer(layer_Zraneluke_7);bounds_group.addLayer(layer_Zraneluke_7);cluster_Zraneluke_7.addTo(map);function pop_Trajektneluke_8(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv trajektne luke</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Trajektneluke_8_0(){return{pane:'pane_Trajektneluke_8',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Trajektneluke_8.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
+map.createPane('pane_Trajektneluke_8');map.getPane('pane_Trajektneluke_8').style.zIndex=408;map.getPane('pane_Trajektneluke_8').style['mix-blend-mode']='normal';var layer_Trajektneluke_8=new L.geoJson(json_Trajektneluke_8,{attribution:'',interactive:true,dataVar:'json_Trajektneluke_8',layerName:'layer_Trajektneluke_8',pane:'pane_Trajektneluke_8',onEachFeature:pop_Trajektneluke_8,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Trajektneluke_8_0(feature));},});var cluster_Trajektneluke_8=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Trajektneluke_8.addLayer(layer_Trajektneluke_8);bounds_group.addLayer(layer_Trajektneluke_8);cluster_Trajektneluke_8.addTo(map);function pop_Marine_9(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv marine</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Županija" colspan="2"><strong>Županija</strong><br />'+(feature.properties['Županija']!==null?autolinker.link(String(feature.properties['Županija']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Adresa" colspan="2"><strong>Adresa</strong><br />'+(feature.properties['Adresa']!==null?autolinker.link(String(feature.properties['Adresa']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Kategorija" colspan="2"><strong>Kategorija</strong><br />'+(feature.properties['Kategorija']!==null?autolinker.link(String(feature.properties['Kategorija']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Mokri vez" colspan="2"><strong>Mokri vez</strong><br />'+(feature.properties['Mokri vez']!==null?autolinker.link(String(feature.properties['Mokri vez']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Suhi vez" colspan="2"><strong>Suhi vez</strong><br />'+(feature.properties['Suhi vez']!==null?autolinker.link(String(feature.properties['Suhi vez']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Duljina" colspan="2"><strong>Duljina</strong><br />'+(feature.properties['Duljina']!==null?autolinker.link(String(feature.properties['Duljina']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Gaz" colspan="2"><strong>Gaz</strong><br />'+(feature.properties['Gaz']!==null?autolinker.link(String(feature.properties['Gaz']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Otvoreno" colspan="2"><strong>Otvoreno</strong><br />'+(feature.properties['Otvoreno']!==null?autolinker.link(String(feature.properties['Otvoreno']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Servis" colspan="2"><strong>Servis</strong><br />'+(feature.properties['Servis']!==null?autolinker.link(String(feature.properties['Servis']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Prehrana" colspan="2"><strong>Prehrana</strong><br />'+(feature.properties['Prehrana']!==null?autolinker.link(String(feature.properties['Prehrana']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Wi-Fi" colspan="2"><strong>Wi-Fi</strong><br />'+(feature.properties['Wi-Fi']!==null?autolinker.link(String(feature.properties['Wi-Fi']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Crpka" colspan="2"><strong>Crpka</strong><br />'+(feature.properties['Crpka']!==null?autolinker.link(String(feature.properties['Crpka']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Punionica" colspan="2"><strong>Punionica</strong><br />'+(feature.properties['Punionica']!==null?autolinker.link(String(feature.properties['Punionica']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Parking" colspan="2"><strong>Parking</strong><br />'+(feature.properties['Parking']!==null?autolinker.link(String(feature.properties['Parking']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Smještaj" colspan="2"><strong>Smještaj</strong><br />'+(feature.properties['Smještaj']!==null?autolinker.link(String(feature.properties['Smještaj']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Bankomat" colspan="2"><strong>Bankomat</strong><br />'+(feature.properties['Bankomat']!==null?autolinker.link(String(feature.properties['Bankomat']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Najam" colspan="2"><strong>Najam</strong><br />'+(feature.properties['Najam']!==null?autolinker.link(String(feature.properties['Najam']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Web" colspan="2"><strong>Web</strong><br />'+(feature.properties['Web']!==null?autolinker.link(String(feature.properties['Web']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Marine_9_0(){return{pane:'pane_Marine_9',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Marine_9.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
+map.createPane('pane_Marine_9');map.getPane('pane_Marine_9').style.zIndex=409;map.getPane('pane_Marine_9').style['mix-blend-mode']='normal';var layer_Marine_9=new L.geoJson(json_Marine_9,{attribution:'',interactive:true,dataVar:'json_Marine_9',layerName:'layer_Marine_9',pane:'pane_Marine_9',onEachFeature:pop_Marine_9,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Marine_9_0(feature));},});var cluster_Marine_9=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Marine_9.addLayer(layer_Marine_9);bounds_group.addLayer(layer_Marine_9);cluster_Marine_9.addTo(map);function pop_Smjetaj_10(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv smještaja</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Kategorija" colspan="2"><strong>Kategorija smještaja</strong><br />'+(feature.properties['Kategorija']!==null?autolinker.link(String(feature.properties['Kategorija']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Mjesto" colspan="2"><strong>Mjesto</strong><br />'+(feature.properties['Mjesto']!==null?autolinker.link(String(feature.properties['Mjesto']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Sobe" colspan="2"><strong>Sobe</strong><br />'+(feature.properties['Sobe']!==null?autolinker.link(String(feature.properties['Sobe']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Zvjezdice" colspan="2"><strong>Zvjezdice</strong><br />'+(feature.properties['Zvjezdice']!==null?autolinker.link(String(feature.properties['Zvjezdice']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Web" colspan="2"><strong>Web</strong><br />'+(feature.properties['Web']!==null?autolinker.link(String(feature.properties['Web']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Smjetaj_10_0(){return{pane:'pane_Smjetaj_10',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Smjetaj_10.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
+map.createPane('pane_Smjetaj_10');map.getPane('pane_Smjetaj_10').style.zIndex=410;map.getPane('pane_Smjetaj_10').style['mix-blend-mode']='normal';var layer_Smjetaj_10=new L.geoJson(json_Smjetaj_10,{attribution:'',interactive:true,dataVar:'json_Smjetaj_10',layerName:'layer_Smjetaj_10',pane:'pane_Smjetaj_10',onEachFeature:pop_Smjetaj_10,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Smjetaj_10_0(feature));},});var cluster_Smjetaj_10=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Smjetaj_10.addLayer(layer_Smjetaj_10);bounds_group.addLayer(layer_Smjetaj_10);cluster_Smjetaj_10.addTo(map);function pop_Parkiralita_11(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv parkirališta</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Vrsta" colspan="2"><strong>Vrsta parkirališta</strong><br />'+(feature.properties['Vrsta']!==null?autolinker.link(String(feature.properties['Vrsta']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Podloga" colspan="2"><strong>Podloga</strong><br />'+(feature.properties['Podloga']!==null?autolinker.link(String(feature.properties['Podloga']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Kapacitet" colspan="2"><strong>Kapacitet</strong><br />'+(feature.properties['Kapacitet']!==null?autolinker.link(String(feature.properties['Kapacitet']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naplata" colspan="2"><strong>Naplata</strong><br />'+(feature.properties['Naplata']!==null?autolinker.link(String(feature.properties['Naplata']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="EUR/h" colspan="2"><strong>Cijena (EUR/h)</strong><br />'+(feature.properties['EUR/h']!==null?autolinker.link(String(feature.properties['EUR/h']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Pristup" colspan="2"><strong>Pristup</strong><br />'+(feature.properties['Pristup']!==null?autolinker.link(String(feature.properties['Pristup']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Parkiralita_11_0(){return{pane:'pane_Parkiralita_11',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Parkiralita_11.svg',iconSize:[26.599999999999998,26.599999999999998]}),interactive:true,}}
+map.createPane('pane_Parkiralita_11');map.getPane('pane_Parkiralita_11').style.zIndex=411;map.getPane('pane_Parkiralita_11').style['mix-blend-mode']='normal';var layer_Parkiralita_11=new L.geoJson(json_Parkiralita_11,{attribution:'',interactive:true,dataVar:'json_Parkiralita_11',layerName:'layer_Parkiralita_11',pane:'pane_Parkiralita_11',onEachFeature:pop_Parkiralita_11,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Parkiralita_11_0(feature));},});var cluster_Parkiralita_11=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Parkiralita_11.addLayer(layer_Parkiralita_11);bounds_group.addLayer(layer_Parkiralita_11);cluster_Parkiralita_11.addTo(map);function pop_Plae_12(feature,layer){var popupContent='<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Naziv" colspan="2"><strong>Naziv plaže</strong><br />'+(feature.properties['Naziv']!==null?autolinker.link(String(feature.properties['Naziv']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Obala" colspan="2"><strong>Vrsta obale</strong><br />'+(feature.properties['Obala']!==null?autolinker.link(String(feature.properties['Obala']).replace(/'/g,'\'').toLocaleString()):'')+'</td>\
+                    </tr>\
+                </table>';var content=removeEmptyRowsFromPopupContent(popupContent,feature);layer.on('popupopen',function(e){if(measuring)return;addClassToPopupIfMedia(content,e.popup);});layer.bindPopup(content,{maxHeight:400});}
+function style_Plae_12_0(){return{pane:'pane_Plae_12',rotationAngle:0.0,rotationOrigin:'center center',icon:L.icon({iconUrl:'markers/Plae_12.svg',iconSize:[34.199999999999996,34.199999999999996]}),interactive:true,}}
+map.createPane('pane_Plae_12');map.getPane('pane_Plae_12').style.zIndex=412;map.getPane('pane_Plae_12').style['mix-blend-mode']='normal';var layer_Plae_12=new L.geoJson(json_Plae_12,{attribution:'',interactive:true,dataVar:'json_Plae_12',layerName:'layer_Plae_12',pane:'pane_Plae_12',onEachFeature:pop_Plae_12,pointToLayer:function(feature,latlng){var context={feature:feature,variables:{}};return L.marker(latlng,style_Plae_12_0(feature));},});var cluster_Plae_12=new L.MarkerClusterGroup({showCoverageOnHover:false,spiderfyDistanceMultiplier:2});cluster_Plae_12.addLayer(layer_Plae_12);bounds_group.addLayer(layer_Plae_12);cluster_Plae_12.addTo(map);var baseTree=[{label:'Podloge:',children:[{label:'Satelitska snimka',layer:ESRI},{label:'OpenStreetMap',layer:OSM}]}];var overlayTree=[{label:'Slojevi:',children:[{label:'<img src="legend/Plae_12.png" /> Plaže',layer:cluster_Plae_12},{label:'<img src="legend/Parkiralita_11.png" /> Parkirališta',layer:cluster_Parkiralita_11},{label:'<img src="legend/Smjetaj_10.png" /> Smještaj',layer:cluster_Smjetaj_10},{label:'<img src="legend/Marine_9.png" /> Marine',layer:cluster_Marine_9},{label:'<img src="legend/Trajektneluke_8.png" /> Trajektne luke',layer:cluster_Trajektneluke_8},{label:'<img src="legend/Zraneluke_7.png" /> Zračne luke',layer:cluster_Zraneluke_7},{label:'<img src="legend/Zatienapriroda_6.png" /> Zaštićena priroda',layer:cluster_Zatienapriroda_6},{label:'<img src="legend/Kulturnadobra_5.png" /> Kulturna dobra',layer:cluster_Kulturnadobra_5},{label:'<img src="legend/Trajektnelinije_4.png" /> Trajektne linije',layer:layer_Trajektnelinije_4},{label:'<img src="legend/Ceste_3.png" /> Ceste',layer:layer_Ceste_3},{label:'<img src="legend/Morskagranica_2.png" /> Morska granica',layer:layer_Morskagranica_2},{label:'<img src="legend/Opine_1.png" /> Općine',layer:layer_Opine_1},{label:'<img src="legend/upanije_0.png" /> Županije',layer:layer_upanije_0}]}];var lay=L.control.layers.tree(baseTree,overlayTree,{collapsed:true});lay.addTo(map);var measuring=false;var measureControl=L.Control.extend({options:{position:'topleft'},onAdd:function(map){var container=L.DomUtil.create('div','leaflet-control-measure leaflet-bar');container.title="Izmjeri udaljenost";if(!map.getPane('pane_measure')){map.createPane('pane_measure');}
+map.getPane('pane_measure').style.zIndex=999999;var btn=L.DomUtil.create('div','',container);btn.innerHTML='📏';btn.style.fontSize='20px';btn.style.textAlign='center';var points=[];var line=null;var infoBox=document.getElementById('infoBox');function updateMeasurement(){if(points.length===0){infoBox.innerHTML='Kliknite na kartu i dodajte dvije ili više točaka.<br>Kliknite na ikonu za dovršetak mjerenja.';}else if(points.length===1){infoBox.innerHTML='Kliknite na kartu za dodavanje drugih točaka.<br>Kliknite na ikonu za dovršetak mjerenja.';}else{var latlngs=points.map(p=>p.getLatLng());var total=0;for(var i=1;i<latlngs.length;i++){total+=latlngs[i-1].distanceTo(latlngs[i]);}
+if(total<1000){infoBox.innerHTML='<b>Udaljenost: '+total.toFixed(2)+' m</b><br>Kliknite na ikonu za dovršetak mjerenja.';}else{var km=total/1000;infoBox.innerHTML='<b>Udaljenost: '+km.toFixed(2)+' km</b><br>Kliknite na ikonu za dovršetak mjerenja.';}}}
+function resetMeasurement(){points.forEach(p=>map.removeLayer(p));points=[];if(line){map.removeLayer(line);line=null;}
+infoBox.style.display='none';}
+L.DomEvent.on(container,'click',function(e){L.DomEvent.stopPropagation(e);if(measuring){measuring=false;btn.classList.remove('active');map.getContainer().style.cursor='';map.getContainer().style.position='relative';map.getContainer().style.zIndex=1000;map.getPane('pane_measure').style.zIndex=1100;resetMeasurement();togglePointerEventsOnLayers(true);toggleLayerInteractivity(false);if(typeof layer_upanije_0!=='undefined'&&!map.hasLayer(layer_upanije_0)){map.addLayer(layer_upanije_0);}
+if(typeof layer_Opine_1!=='undefined'&&!map.hasLayer(layer_Opine_1)){map.addLayer(layer_Opine_1);}}else{measuring=true;btn.classList.add('active');map.getContainer().style.cursor='crosshair';infoBox.style.display='block';updateMeasurement();togglePointerEventsOnLayers(false);toggleLayerInteractivity(true);if(typeof layer_upanije_0!=='undefined'&&map.hasLayer(layer_upanije_0)){map.removeLayer(layer_upanije_0);}
+if(typeof layer_Opine_1!=='undefined'&&map.hasLayer(layer_Opine_1)){map.removeLayer(layer_Opine_1);}}});map.on('click',function(e){if(!measuring)return;var marker=L.circleMarker(e.latlng,{pane:'pane_measure',radius:5,color:'red',fillColor:'red',fillOpacity:1}).addTo(map);points.push(marker);if(points.length>=2){if(line)map.removeLayer(line);var latlngs=points.map(p=>p.getLatLng());line=L.polyline(latlngs,{color:'red',pane:'pane_measure'}).addTo(map);}
+updateMeasurement();});map.on('dblclick',function(e){if(!measuring)return;measuring=false;btn.classList.remove('active');map.getContainer().style.cursor='';resetMeasurement();if(typeof layer_upanije_0!=='undefined'&&!map.hasLayer(layer_upanije_0)){map.addLayer(layer_upanije_0);}
+if(typeof layer_Opine_1!=='undefined'&&!map.hasLayer(layer_Opine_1)){map.addLayer(layer_Opine_1);}});return container;}});map.addControl(new measureControl());setBounds();</script>
+<div id=coords-container>
+<select id=projectionSelect>
+<option value=wgs84>WGS84</option>
+<option value=htrs96>HTRS96/TM</option>
+</select>
+<div id=coords>φ: ---, λ: ---</div>
+</div>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js></script>
+<script>
+  proj4.defs("EPSG:3765", "+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs");
+  const coordsDiv = document.getElementById('coords');
+  const projectionSelect = document.getElementById('projectionSelect');
+  function toDMS(deg) {
+    const absolute = Math.abs(deg);
+    const degrees = Math.floor(absolute);
+    const minutesFloat = (absolute - degrees) * 60;
+    const minutes = Math.floor(minutesFloat);
+    const seconds = ((minutesFloat - minutes) * 60).toFixed(2);
+    const degreesStr = degrees;
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    const secondsStr = seconds < 10 ? '0' + seconds : seconds;
+    const sign = deg < 0 ? '-' : '';
+    return `${sign}${degreesStr}° ${minutesStr}' ${secondsStr}''`;
+  }
+  if (typeof map !== 'undefined') {
+    map.on('mousemove', function(e) {
+      const lat = e.latlng.lat;
+      const lon = e.latlng.lng;
+      const selected = projectionSelect.value;
+      if (selected === "wgs84") {
+        const latDMS = toDMS(lat);
+        const lonDMS = toDMS(lon);
+        coordsDiv.textContent = `φ: ${latDMS}, λ: ${lonDMS}`;
+      } else if (selected === "htrs96") {
+        const [easting, northing] = proj4("EPSG:4326", "EPSG:3765", [lon, lat]);
+        coordsDiv.textContent = `E: ${easting.toFixed(2)} m, N: ${northing.toFixed(2)} m`;
+      }
+    });
+  } else {
+    coordsDiv.textContent = 'Leaflet karta nije inicijalizirana.';
+  }
+        </script>
+</body>
+</html>
