@@ -80,13 +80,11 @@ content="google23a9c3762fc1cd27">
 <script src=data/Plae_12.js></script>
 <script>var map=L.map('map',{zoomControl:false,maxZoom:18,minZoom:5})
 map.createPane('pane_measure');map.getPane('pane_measure').style.zIndex=999;L.control.zoom({zoomInTitle:'Povećaj kartu',zoomOutTitle:'Smanji kartu'}).addTo(map);L.control.locate({strings:{title:"Pronađi moju lokaciju",popup:"Nalazite se unutar {distance} m od ovog mjesta.",outsideMapBoundsMsg:"Nalazite se izvan granica karte."}}).addTo(map);map.whenReady(function(){document.querySelectorAll('.leaflet-control a').forEach(function(el){el.removeAttribute('href');});});var OSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
-var ESRI=L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{});map.attributionControl.remove();
-  ESRI.on('load', function() {
+var ESRI=L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{});map.attributionControl.remove();ESRI.addTo(map);
     map.whenReady(function() {
   var preloader = document.getElementById('preloader');
   if (preloader) preloader.style.display = 'none';
 });
-  });ESRI.addTo(map);
 L.control.attribution({position:'bottomleft'}).addTo(map);map.removeControl(map.attributionControl);
 var attribution=L.control.attribution({prefix:false,position:'bottomleft'}).addTo(map);
 attribution.addAttribution('<img src="https://leafletjs.com/docs/images/logo.png" '+'style="height:22px; cursor: pointer;" '+'alt="Leaflet logo" '+'title="https://leafletjs.com" '+'onclick="window.open(\'https://leafletjs.com\', \'_blank\')">');var hash=new L.Hash(map);var autolinker=new Autolinker({truncate:{length:30,location:'smart'}});function removeEmptyRowsFromPopupContent(content,feature){var tempDiv=document.createElement('div');tempDiv.innerHTML=content;var rows=tempDiv.querySelectorAll('tr');for(var i=0;i<rows.length;i++){var td=rows[i].querySelector('td.visible-with-data');var key=td?td.id:'';if(td&&td.classList.contains('visible-with-data')&&feature.properties[key]==null){rows[i].parentNode.removeChild(rows[i]);}}
