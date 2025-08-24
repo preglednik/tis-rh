@@ -18,6 +18,7 @@ content="google23a9c3762fc1cd27">
 <link rel=stylesheet href=css/MarkerCluster.css>
 <link rel=stylesheet href=css/MarkerCluster.Default.css>
 <style>html,body,#map{width:100%;height:100%;padding:0;margin:0}</style>
+<style>.leaflet-control-scale {left: 5px !important; font-family: 'PT Sans', sans-serif !important;bottom: 15px !important;}</style>
 <style>html,body{height:100%;margin:0;font-family:'PT Sans',sans-serif}#map{height:100%}.leaflet-control.abstract{width:32px!important;height:30px!important;border:1px solid #666!important;background-color:#f8f9fa!important;background-image:url('https://raw.githubusercontent.com/preglednik/tis-ikona/main/TIS_RH-removebg-preview.png')!important;background-size:30px 30px!important;background-position:center center!important;background-repeat:no-repeat!important;border-radius:4px!important;box-shadow:1px 1px 4px rgba(0,0,0,0.65)!important;font-size:18px;text-align:center;line-height:30px;color:transparent!important;cursor:pointer;user-select:none}.leaflet-control.abstractUncollapsed{background-color:#f8f9fa!important;font-family:'PT Sans',sans-serif;font-size:9pt;max-width:400px;max-height:70vh;overflow-y:auto;padding:15px;border-radius:10px;box-shadow:0 0 8px rgba(0,0,0,0.4);color:black}.leaflet-control-measure{width:30px;height:30px;border:1px solid #666!important;background-color:#f8f9fa!important;background-size:26px 26px!important;border-radius:4px!important;background-position:center center;background-repeat:no-repeat;box-shadow:1px 1px 4px rgba(0,0,0,0.65)!important;font-size:18px;text-align:center;line-height:30px;color:#333!important;cursor:pointer;user-select:none}.leaflet-control-measure:hover{background-color:#f0f0f0}.leaflet-control-measure.active{background-color:#d0ebff;border-color:#0056b3;color:#fff}#infoBox{position:absolute;top:180px;left:10px;background:white;padding:8px 12px;border-radius:6px;box-shadow:0 0 8px rgba(0,0,0,0.3);font-size:14px;display:none;z-index:1000}.leaflet-control-layers-toggle{width:30px!important;height:30px!important;background-size:26px 26px!important;background-position:center center;background-repeat:no-repeat;font-family:'PT Sans',sans-serif!important;background-color:#fff;border:1px solid #666;border-radius:4px;box-shadow:1px 1px 4px rgba(0,0,0,0.3);cursor:pointer}.leaflet-control-layers-toggle::before{font-family:'PT Sans',sans-serif;font-size:18px;display:block;text-align:center;line-height:30px}</style>
 <style>.leaflet-control-attribution{left:10px!important;bottom:10px!important;right:auto!important;text-align:left!important;display:flex!important;align-items:center;gap:5px;padding:3px 8px!important;background:rgba(255,255,255,0.8)!important;box-shadow:0 0 8px rgba(0,0,0,0.3)!important;border-radius:4px!important;font-size:14px!important}.leaflet-control-attribution a{display:inline-block}.leaflet-control-attribution img{vertical-align:middle}</style>
 <title>Turistički informacijski sustav Republike Hrvatske</title>
@@ -85,6 +86,7 @@ abstract.show=function(){this._div.classList.remove("abstract");this._div.classL
 +'<strong style="font-size: 10pt; font-family: \'PT Sans\', sans-serif;">Autori:</strong><br />'
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Josip Alpeza, univ. bacc. ing. geod. et geoinf.</span><br />'
 +'<span style="font-family: \'PT Sans\', sans-serif; font-size: 10pt;">- Vanna Roglić, univ. bacc. ing. geod. et geoinf.</span><br />';};abstract.addTo(map);var bounds_group=new L.featureGroup([]);function setBounds(){if(bounds_group.getLayers().length){map.fitBounds(bounds_group.getBounds());}
+L.control.scale({position: 'bottomleft', imperial: false, metric: true}).addTo(map);
 map.setMaxBounds(map.getBounds());}
 function pop_upanije_0(feature,layer){var popupContent='<table>\
                     <tr>\
@@ -344,9 +346,3 @@ if(typeof layer_Opine_1!=='undefined'&&!map.hasLayer(layer_Opine_1)){map.addLaye
         </script>
 </body>
 </html>
-
-
-
-
-
-
