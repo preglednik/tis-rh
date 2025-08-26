@@ -1,2 +1,1 @@
-# tis-rh
-Turistički informacijski sustav Republike Hrvatske. Preglednik plaža, parkirališta, smještaja, marina, trajektnih luka i trajektnih linija, zračnih luka, zaštićene prirode i kulturnih dobara. Interaktivna karta s informacijama o turističkoj infrastrukturi u Republici Hrvatskoj.
+Turistička karta Hrvatske. Interaktivna karta turističke infrastrukture u Republici Hrvatskoj: smještaji, parkirališta, plaže, marine, trajektne luke i trajektne linije, zračne luke, zaštićena priroda i kulturna dobra.
