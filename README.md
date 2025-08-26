@@ -1,1 +1,2 @@
-Turistička karta Hrvatske. Interaktivna karta turističke infrastrukture u Republici Hrvatskoj: smještaji, parkirališta, plaže, marine, trajektne luke i trajektne linije, zračne luke, zaštićena priroda i kulturna dobra.
+#Turistički informacijski sustav Republike Hrvatske
+Turistička web karta Hrvatske. Interaktivna karta turističke infrastrukture u Republici Hrvatskoj: smještaji, parkirališta, plaže, marine, trajektne luke i trajektne linije, zračne luke, zaštićena priroda i kulturna dobra.
